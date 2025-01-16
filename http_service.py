@@ -1,14 +1,15 @@
 from dataclasses import dataclass, field
 import uvicorn
 from fastapi import FastAPI
-from starlette.middleware.cors import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 
-from routes.backtest_api import BacktestAPI
+from routes.backtest_router import BacktestRouter
+from utils import app_lifespan
 
 
 @dataclass
 class HttpOptions:
-    base_path: str = "/api/v1"
+    base_path: str = "/v1"
     allow_credentials: bool = True
     allow_origins: list[str] = field(default_factory=lambda: ["*"])
     allow_methods: list[str] = field(default_factory=lambda: ["*"])
@@ -19,13 +20,13 @@ class HttpService:
     def __init__(
         self,
         host: str = "localhost",
-        port: int = 8888,
+        port: int = 8000,
         options: HttpOptions = HttpOptions(),
     ):
         self.options = options
         self._host = host
         self._port = port
-        self._app = FastAPI(root_path_in_servers=True)
+        self._app = FastAPI(root_path_in_servers=True, lifespan=app_lifespan)
 
     def _init_server(self):
         self._app.add_middleware(
@@ -40,7 +41,7 @@ class HttpService:
         """Add all of FastAPI routers"""
 
         self._app.include_router(
-            BacktestAPI().route,
+            BacktestRouter().route,
             prefix=self.options.base_path,
             tags=["Backtests API"],
         )
