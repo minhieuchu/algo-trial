@@ -20,7 +20,7 @@ class HttpService:
     def __init__(
         self,
         host: str = "localhost",
-        port: int = 8000,
+        port: int = 8080,
         options: HttpOptions = HttpOptions(),
     ):
         self.options = options

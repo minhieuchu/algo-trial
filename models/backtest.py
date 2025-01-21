@@ -10,11 +10,11 @@ class BacktestBase(Document):
 
     id: Optional[PydanticObjectId] = None
     strategy: Strategy
+    ticker: str
+    start_time: int
+    end_time: int
+    initial_capital: float
     logic: Union[SimpleMovingAverageCrossover, RelativeStrengthIndex]
-
-
-class BacktestCreate(BacktestBase):
-    pass
 
 
 class Backtest(BacktestBase):

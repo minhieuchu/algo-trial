@@ -8,8 +8,8 @@ class Strategy(StrEnum):
 
 
 class SimpleMovingAverageCrossover(BaseModel):
-    short_term_length: int
-    long_term_length: int
+    fast_sma_period: int
+    slow_sma_period: int
 
 
 class RelativeStrengthIndex(BaseModel):
