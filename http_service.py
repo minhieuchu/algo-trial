@@ -3,6 +3,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from config import SERVER_HOST, SERVER_PORT
 from routes.backtest_router import BacktestRouter
 from utils import app_lifespan
 
@@ -19,8 +20,8 @@ class HttpOptions:
 class HttpService:
     def __init__(
         self,
-        host: str = "localhost",
-        port: int = 8080,
+        host: str = SERVER_HOST,
+        port: int = SERVER_PORT,
         options: HttpOptions = HttpOptions(),
     ):
         self.options = options
