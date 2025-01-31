@@ -2,7 +2,7 @@ from typing import Union, Optional
 from beanie import Document, PydanticObjectId
 from pydantic import BaseModel
 
-from models.strategy import Strategy, SimpleMovingAverageCrossover, RelativeStrengthIndex
+from models.strategy import Strategy, SMACrossoverParams, RSIParams
 from models.trade import Trade
 
 
@@ -31,7 +31,7 @@ class BacktestBase(Document):
     initial_capital: float
     position_sizing: PositionSizing
     risk_free_rate: Optional[float] = 0
-    logic: Union[SimpleMovingAverageCrossover, RelativeStrengthIndex]
+    logic: Union[SMACrossoverParams, RSIParams]
     result: Optional[BacktestResult] = None
 
 

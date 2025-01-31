@@ -6,7 +6,8 @@ import yfinance as yf
 from models.backtest import BacktestBase, BacktestResult
 from models.strategy import Strategy
 from repositories.backtest_repository import BacktestRepository
-from strategies.SmaCrossover import SmaCrossover
+from strategies.SMACrossover import SMACrossover
+from strategies.RSI import RSI
 
 
 class BacktestService:
@@ -37,25 +38,36 @@ class BacktestService:
 
         if backtest.strategy == Strategy.SMA:
             cerebro.addstrategy(
-                SmaCrossover,
+                SMACrossover,
                 pfast=backtest.logic.fast_sma_period,
                 pslow=backtest.logic.slow_sma_period,
                 ps_fixed=backtest.position_sizing.fixed,
                 ps_percentage=backtest.position_sizing.percentage,
             )
-            results = cerebro.run()
-            sharpe_ratio = results[0].analyzers.sharpe_ratio.get_analysis()
-            drawdown_analysis = results[0].analyzers.drawdown.get_analysis()
 
-            backtest_result = BacktestResult(
-                portfolio_cash=cerebro.broker.get_cash(),
-                portfolio_value=cerebro.broker.get_value(),
-                sharpe_ratio=sharpe_ratio["sharperatio"],
-                max_drawdown=drawdown_analysis["max"]["drawdown"],
-                trade_list=results[0].trades,
+        if backtest.strategy == Strategy.RSI:
+            cerebro.addstrategy(
+                RSI,
+                rsi_period=backtest.logic.rsi_period,
+                rsi_low=backtest.logic.rsi_low,
+                rsi_high=backtest.logic.rsi_high,
+                ps_fixed=backtest.position_sizing.fixed,
+                ps_percentage=backtest.position_sizing.percentage,
             )
-            backtest.result = backtest_result
 
-            await BacktestRepository().save_backtest(backtest)
+        results = cerebro.run()
+        sharpe_ratio = results[0].analyzers.sharpe_ratio.get_analysis()
+        drawdown_analysis = results[0].analyzers.drawdown.get_analysis()
 
-            return backtest_result
+        backtest_result = BacktestResult(
+            portfolio_cash=cerebro.broker.get_cash(),
+            portfolio_value=cerebro.broker.get_value(),
+            sharpe_ratio=sharpe_ratio["sharperatio"],
+            max_drawdown=drawdown_analysis["max"]["drawdown"],
+            trade_list=results[0].trades,
+        )
+        backtest.result = backtest_result
+
+        await BacktestRepository().save_backtest(backtest)
+
+        return backtest_result

@@ -4,14 +4,15 @@ from pydantic import BaseModel
 
 class Strategy(StrEnum):
     SMA = "SMA"
-    RST = "RSI"
+    RSI = "RSI"
 
 
-class SimpleMovingAverageCrossover(BaseModel):
+class SMACrossoverParams(BaseModel):
     fast_sma_period: int
     slow_sma_period: int
 
 
-class RelativeStrengthIndex(BaseModel):
-    buy_rsi: int
-    sell_rsi: int
+class RSIParams(BaseModel):
+    rsi_period: int
+    rsi_low: float
+    rsi_high: float
