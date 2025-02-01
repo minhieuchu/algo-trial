@@ -3,7 +3,8 @@ from pydantic import BaseModel
 
 
 class Strategy(StrEnum):
-    SMA = "SMA"
+    SMACrossover = "SMACrossover"
+    Breakout = "Breakout"
     RSI = "RSI"
 
 
@@ -16,3 +17,7 @@ class RSIParams(BaseModel):
     rsi_period: int
     rsi_low: float
     rsi_high: float
+
+
+class BreakoutParams(BaseModel):
+    lookback: int

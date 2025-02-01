@@ -3,16 +3,17 @@ from datetime import datetime
 import pandas as pd
 import yfinance as yf
 
-from models.backtest import BacktestBase, BacktestResult
+from models.backtest import Backtest, BacktestBase, BacktestResult
 from models.strategy import Strategy
 from repositories.backtest_repository import BacktestRepository
+from strategies.Breakout import Breakout
 from strategies.SMACrossover import SMACrossover
 from strategies.RSI import RSI
 
 
 class BacktestService:
     @staticmethod
-    async def get_backtests():
+    async def get_backtests() -> list[Backtest]:
         result = await BacktestRepository().get_backtests()
         return result
 
@@ -36,7 +37,7 @@ class BacktestService:
         )
         cerebro.addanalyzer(bt.analyzers.DrawDown, _name="drawdown")
 
-        if backtest.strategy == Strategy.SMA:
+        if backtest.strategy == Strategy.SMACrossover:
             cerebro.addstrategy(
                 SMACrossover,
                 pfast=backtest.logic.fast_sma_period,
@@ -51,6 +52,14 @@ class BacktestService:
                 rsi_period=backtest.logic.rsi_period,
                 rsi_low=backtest.logic.rsi_low,
                 rsi_high=backtest.logic.rsi_high,
+                ps_fixed=backtest.position_sizing.fixed,
+                ps_percentage=backtest.position_sizing.percentage,
+            )
+
+        if backtest.strategy == Strategy.Breakout:
+            cerebro.addstrategy(
+                Breakout,
+                lookback=backtest.logic.lookback,
                 ps_fixed=backtest.position_sizing.fixed,
                 ps_percentage=backtest.position_sizing.percentage,
             )

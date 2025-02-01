@@ -2,7 +2,7 @@ from typing import Union, Optional
 from beanie import Document, PydanticObjectId
 from pydantic import BaseModel
 
-from models.strategy import Strategy, SMACrossoverParams, RSIParams
+from models.strategy import Strategy, SMACrossoverParams, RSIParams, BreakoutParams
 from models.trade import Trade
 
 
@@ -14,7 +14,7 @@ class PositionSizing(BaseModel):
 class BacktestResult(BaseModel):
     portfolio_cash: float
     portfolio_value: float
-    sharpe_ratio: float
+    sharpe_ratio: Optional[float]
     max_drawdown: float
     trade_list: list[Trade]
 
@@ -31,7 +31,7 @@ class BacktestBase(Document):
     initial_capital: float
     position_sizing: PositionSizing
     risk_free_rate: Optional[float] = 0
-    logic: Union[SMACrossoverParams, RSIParams]
+    logic: Union[SMACrossoverParams, RSIParams, BreakoutParams]
     result: Optional[BacktestResult] = None
 
 
