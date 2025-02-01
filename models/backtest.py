@@ -37,4 +37,3 @@ class BacktestBase(Document):
 
 class Backtest(BacktestBase):
     id: PydanticObjectId
-    result: BacktestResult

@@ -2,6 +2,7 @@ import backtrader as bt
 from datetime import datetime
 import pandas as pd
 import yfinance as yf
+from typing import Optional
 
 from models.backtest import Backtest, BacktestBase, BacktestResult
 from models.strategy import Strategy
@@ -18,7 +19,7 @@ class BacktestService:
         return result
 
     @staticmethod
-    async def execute_backtest(backtest: BacktestBase) -> BacktestResult:
+    async def execute_backtest(backtest: BacktestBase) -> Optional[BacktestResult]:
         start_time = datetime.fromtimestamp(backtest.start_time).strftime("%Y-%m-%d")
         end_time = datetime.fromtimestamp(backtest.end_time).strftime("%Y-%m-%d")
 
@@ -64,7 +65,12 @@ class BacktestService:
                 ps_percentage=backtest.position_sizing.percentage,
             )
 
-        results = cerebro.run()
+        try:
+            results = cerebro.run()
+        except Exception as e:
+            print("Backtrader Cerebro Exception: ", e)
+            return None
+
         sharpe_ratio = results[0].analyzers.sharpe_ratio.get_analysis()
         drawdown_analysis = results[0].analyzers.drawdown.get_analysis()
 
