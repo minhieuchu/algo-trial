@@ -23,7 +23,12 @@ class BacktestService:
         start_time = datetime.fromtimestamp(backtest.start_time).strftime("%Y-%m-%d")
         end_time = datetime.fromtimestamp(backtest.end_time).strftime("%Y-%m-%d")
 
-        df = yf.download(backtest.ticker, start=start_time, end=end_time)
+        try:
+            df = yf.download(backtest.ticker, start=start_time, end=end_time)
+        except Exception as e:
+            print("Download ticker data error: ", e)
+            return None
+
         df.columns = [col[0] for col in df.columns]
         df.index = pd.to_datetime(df.index)
         data = bt.feeds.PandasData(dataname=df)  # noqa
