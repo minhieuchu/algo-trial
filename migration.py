@@ -32,7 +32,7 @@ async def migration_script():
             print("Validation Error: ", e)
             backtest.pop("result")
             backtest_base = BacktestBase.model_validate(backtest)
-            backtest_result = await BacktestService.execute_backtest(backtest_base)
+            backtest_result = await BacktestService.run_backtest(backtest_base)
 
             await Backtest.find_one({"_id": backtest_base.id}).update({"$set": {"result": backtest_result}})
 

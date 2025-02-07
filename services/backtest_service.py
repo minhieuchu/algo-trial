@@ -19,7 +19,7 @@ class BacktestService:
         return result
 
     @staticmethod
-    async def execute_backtest(backtest: BacktestBase) -> Optional[BacktestResult]:
+    async def run_backtest(backtest: BacktestBase) -> Optional[BacktestResult]:
         start_time = datetime.fromtimestamp(backtest.start_time).strftime("%Y-%m-%d")
         end_time = datetime.fromtimestamp(backtest.end_time).strftime("%Y-%m-%d")
 

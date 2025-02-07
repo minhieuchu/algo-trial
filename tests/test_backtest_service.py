@@ -6,7 +6,7 @@ from services.backtest_service import BacktestService
 
 
 @pytest.mark.asyncio
-async def test_execute_backtest_succeed(test_db):
+async def test_run_backtest_succeed(test_db):
     backtest_base = BacktestBase(
         strategy=Strategy.SMACrossover,
         ticker="AAPL",
@@ -17,12 +17,12 @@ async def test_execute_backtest_succeed(test_db):
         position_sizing=PositionSizing(fixed=0, percentage=0.1),
         logic=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
     )
-    await BacktestService.execute_backtest(backtest_base)
+    await BacktestService.run_backtest(backtest_base)
     backtest_list = await BacktestService.get_backtests()
     assert len(backtest_list) == 1
 
 @pytest.mark.asyncio
-async def test_execute_backtest_fail_time(test_db):
+async def test_run_backtest_fail_time(test_db):
    # Start time is equal to end time
    backtest_base_1 = BacktestBase(
       strategy=Strategy.SMACrossover,
@@ -45,15 +45,15 @@ async def test_execute_backtest_fail_time(test_db):
        position_sizing=PositionSizing(fixed=0, percentage=0.1),
        logic=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
    )
-   await BacktestService.execute_backtest(backtest_base_1)
-   await BacktestService.execute_backtest(backtest_base_2)
+   await BacktestService.run_backtest(backtest_base_1)
+   await BacktestService.run_backtest(backtest_base_2)
 
    backtest_list = await BacktestService.get_backtests()
    assert len(backtest_list) == 0
 
 
 @pytest.mark.asyncio
-async def test_execute_backtest_fail_ticker(test_db):
+async def test_run_backtest_fail_ticker(test_db):
     # Missing ticker
     backtest_base_1 = BacktestBase(
         strategy=Strategy.SMACrossover,
@@ -76,8 +76,8 @@ async def test_execute_backtest_fail_ticker(test_db):
         position_sizing=PositionSizing(fixed=0, percentage=0.1),
         logic=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
     )
-    await BacktestService.execute_backtest(backtest_base_1)
-    await BacktestService.execute_backtest(backtest_base_2)
+    await BacktestService.run_backtest(backtest_base_1)
+    await BacktestService.run_backtest(backtest_base_2)
 
     backtest_list = await BacktestService.get_backtests()
     assert len(backtest_list) == 0

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 from config import SERVER_HOST, SERVER_PORT
 from routes.backtest_router import BacktestRouter
@@ -28,8 +28,9 @@ class HttpService:
         self._host = host
         self._port = port
         self._app = FastAPI(root_path_in_servers=True, lifespan=app_lifespan)
+        self._initialized = False
 
-    def _init_server(self):
+    def _init_app(self):
         self._app.add_middleware(
             CORSMiddleware,
             allow_origins=self.options.allow_origins,
@@ -40,14 +41,22 @@ class HttpService:
 
     def _create_routes(self):
         """Add all of FastAPI routers"""
-
         self._app.include_router(
             BacktestRouter().route,
             prefix=self.options.base_path,
             tags=["Backtests API"],
         )
 
+    def _init_server(self):
+        if not self._initialized:
+            self._init_app()
+            self._create_routes()
+            self._initialized = True
+
+    def get_app(self):
+        self._init_server()
+        return self._app
+
     def start(self):
         self._init_server()
-        self._create_routes()
         uvicorn.run(self._app, host=self._host, port=self._port)

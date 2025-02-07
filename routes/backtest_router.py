@@ -27,5 +27,5 @@ class BacktestRouter:
 
     @staticmethod
     async def execute_backtest(backtest: BacktestBase) -> Optional[BacktestResult]:
-        result = await BacktestService.execute_backtest(backtest)
+        result = await BacktestService.run_backtest(backtest)
         return result
