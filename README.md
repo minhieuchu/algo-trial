@@ -19,3 +19,14 @@ python main.py
 cd tests
 pytest -v
 ```
+
+## Run tests with coverage
+```bash
+cd tests
+coverage run -m pytest -v
+```
+
+### View test coverage report
+```bash
+coverage report -m
+```
