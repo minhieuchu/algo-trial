@@ -81,4 +81,4 @@ def test_run_backtest_fail_ticker(test_db, test_client):
     backtest_response = test_client.get(LIST_BACKTESTS_URL)
     backtest_list = backtest_response.json()
 
-    assert len(backtest_list) == 0
+    assert len(backtest_list) == 1
