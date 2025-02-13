@@ -1,12 +1,22 @@
 services:
+  fastapi:
+    build: .
+    container_name: fastapi
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      - MONGODB_HOST=mongodb
+      - MONGODB_PORT=27017
+      - MONGODB_DATABASE=algo_trial
+      - MONGODB_DATABASE_TEST=algo_trial_test
+
   mongodb:
     image: mongo:latest
     container_name: mongodb
     volumes:
       - mongodb-data:/data/db/
-#    environment:
-#      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-#      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
     ports:
       - "27017:27017"
 
