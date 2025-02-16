@@ -1,0 +1,36 @@
+name: Build and Push Docker Image
+
+#on:
+#  pull_request:
+#    types:
+#      - closed
+
+on:
+  workflow_run:
+    workflows: ["Integration Test"]
+    types:
+      - completed
+
+jobs:
+  Build-and-Push:
+#    if: github.event.pull_request.merged == true
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Log in to Private Docker Registry
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build Docker Image
+        run: docker build -t fastapi-backend .
+
+#      - name: Push Docker Image
+#        run: docker push myregistry.com/myrepo:${{ github.sha }}
+
+      - name: Tag Latest and Push
+        run: |
+          docker tag fastapi-backend minhieuchu/algo-trial:fastapi-backend
+          docker push minhieuchu/algo-trial:fastapi-backend
