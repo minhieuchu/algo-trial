@@ -10,8 +10,8 @@ def test_run_backtest_succeed(test_db, test_client):
         start_time=1650042000,
         end_time=1725123600,
         initial_capital=100000,
-        position_sizing=PositionSizing(fixed=0, percentage=0.1),
-        logic=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
+        position_sizing=PositionSizing(type="percentage", value=0.1),
+        strategy_params=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
     )
     test_client.post(RUN_BACKTEST_URL, json=backtest_base.model_dump(mode="json"))
     backtest_response = test_client.get(LIST_BACKTESTS_URL)
@@ -28,8 +28,8 @@ def test_run_backtest_fail_time(test_db, test_client):
         end_time=1650042000,
         initial_capital=100000,
         risk_free_rate=0.0,
-        position_sizing=PositionSizing(fixed=0, percentage=0.1),
-        logic=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
+        position_sizing=PositionSizing(type="percentage", value=0.1),
+        strategy_params=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
     )
     # Start time is larger than end time
     backtest_base_2 = BacktestBase(
@@ -39,8 +39,8 @@ def test_run_backtest_fail_time(test_db, test_client):
         end_time=1600042000,
         initial_capital=100000,
         risk_free_rate=0.0,
-        position_sizing=PositionSizing(fixed=0, percentage=0.1),
-        logic=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
+        position_sizing=PositionSizing(type="percentage", value=0.1),
+        strategy_params=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
     )
 
     test_client.post(RUN_BACKTEST_URL, json=backtest_base_1.model_dump(mode="json"))
@@ -60,8 +60,8 @@ def test_run_backtest_fail_ticker(test_db, test_client):
         end_time=1725123600,
         initial_capital=100000,
         risk_free_rate=0.0,
-        position_sizing=PositionSizing(fixed=0, percentage=0.1),
-        logic=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
+        position_sizing=PositionSizing(type="percentage", value=0.1),
+        strategy_params=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
     )
     # Non-existent ticker
     backtest_base_2 = BacktestBase(
@@ -71,8 +71,8 @@ def test_run_backtest_fail_ticker(test_db, test_client):
         end_time=1725123600,
         initial_capital=100000,
         risk_free_rate=0.0,
-        position_sizing=PositionSizing(fixed=0, percentage=0.1),
-        logic=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
+        position_sizing=PositionSizing(type="percentage", value=0.1),
+        strategy_params=SMACrossoverParams(fast_sma_period=10, slow_sma_period=30),
     )
 
     test_client.post(RUN_BACKTEST_URL, json=backtest_base_1.model_dump(mode="json"))

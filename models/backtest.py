@@ -1,4 +1,4 @@
-from typing import Union, Optional
+from typing import Union, Optional, Literal
 from beanie import Document, PydanticObjectId
 from pydantic import BaseModel
 
@@ -7,8 +7,8 @@ from models.trade import Trade
 
 
 class PositionSizing(BaseModel):
-    fixed: Optional[float] = None
-    percentage: Optional[float] = None
+    type: Literal['fixed', 'percentage']
+    value: float
 
 
 class BacktestResult(BaseModel):
@@ -31,7 +31,7 @@ class BacktestBase(Document):
     initial_capital: float
     position_sizing: PositionSizing
     risk_free_rate: Optional[float] = 0
-    logic: Union[SMACrossoverParams, RSIParams, BreakoutParams]
+    strategy_params: Union[SMACrossoverParams, RSIParams, BreakoutParams]
     result: Optional[BacktestResult] = None
 
 

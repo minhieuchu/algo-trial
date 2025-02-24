@@ -42,9 +42,9 @@ class StrategyBase(bt.Strategy, metaclass=StrategyMeta):
 
     def _get_buy_size(self) -> int:
         cash = self.broker.get_cash()
-        investment_amount = self.params.ps_fixed  # noqa
-        if self.params.ps_percentage > 0:  # noqa
-            investment_amount = cash * self.params.ps_percentage  # noqa
+        investment_amount = self.params.ps_value  # noqa
+        if self.params.ps_type == "percentage":  # noqa
+            investment_amount = cash * self.params.ps_value / 100  # noqa
 
         share_price = self.data.close[0]
         share_size = investment_amount // share_price

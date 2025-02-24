@@ -1,4 +1,4 @@
 default_strategy_params = dict(
-    ps_fixed=0.0,       # position sizing fixed
-    ps_percentage=0.0,  # position sizing percentage
+    ps_type="fixed",  # position sizing type
+    ps_value=1000.0      # position sizing value
 )

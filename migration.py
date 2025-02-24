@@ -15,9 +15,6 @@ async def migration_script():
     await init_beanie(database, document_models=[Backtest])
 
     # Put migration logic here
-    # await Backtest.find({"strategy": "SMA"}).update(
-    #     {"$set": {"strategy": Strategy.SMACrossover}}
-    # )
     # await Backtest.find({"position_sizing": {"$exists": False}}).update_many(
     #     {"$set": {"position_sizing": {"fixed": 0, "percentage": 0.05}}}
     # )

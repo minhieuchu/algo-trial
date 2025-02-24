@@ -46,28 +46,28 @@ class BacktestService:
         if backtest.strategy == Strategy.SMACrossover:
             cerebro.addstrategy(
                 SMACrossover,
-                pfast=backtest.logic.fast_sma_period,
-                pslow=backtest.logic.slow_sma_period,
-                ps_fixed=backtest.position_sizing.fixed,
-                ps_percentage=backtest.position_sizing.percentage,
+                pfast=backtest.strategy_params.fast_sma_period,
+                pslow=backtest.strategy_params.slow_sma_period,
+                ps_type=backtest.position_sizing.type,
+                ps_value=backtest.position_sizing.value,
             )
 
         if backtest.strategy == Strategy.RSI:
             cerebro.addstrategy(
                 RSI,
-                rsi_period=backtest.logic.rsi_period,
-                rsi_low=backtest.logic.rsi_low,
-                rsi_high=backtest.logic.rsi_high,
-                ps_fixed=backtest.position_sizing.fixed,
-                ps_percentage=backtest.position_sizing.percentage,
+                rsi_period=backtest.strategy_params.rsi_period,
+                rsi_low=backtest.strategy_params.rsi_low,
+                rsi_high=backtest.strategy_params.rsi_high,
+                ps_type=backtest.position_sizing.type,
+                ps_value=backtest.position_sizing.value,
             )
 
         if backtest.strategy == Strategy.Breakout:
             cerebro.addstrategy(
                 Breakout,
-                lookback=backtest.logic.lookback,
-                ps_fixed=backtest.position_sizing.fixed,
-                ps_percentage=backtest.position_sizing.percentage,
+                lookback=backtest.strategy_params.lookback,
+                ps_type=backtest.position_sizing.type,
+                ps_value=backtest.position_sizing.value,
             )
 
         try:
