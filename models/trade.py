@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 
 class Trade(BaseModel):
+    ref: int
     size: int
     price: float
     value: float

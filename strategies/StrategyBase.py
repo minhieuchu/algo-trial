@@ -1,5 +1,6 @@
 from abc import abstractmethod, ABCMeta
 import backtrader as bt
+from typing import Dict
 
 from models.trade import Trade
 from strategies.constants import default_strategy_params
@@ -14,6 +15,7 @@ class StrategyBase(bt.Strategy, metaclass=StrategyMeta):
 
     def __init__(self):
         self.trades: list[Trade] = []
+        self.trade_sizes: Dict[int, float] = {}
 
     @abstractmethod
     def next(self):
@@ -23,9 +25,20 @@ class StrategyBase(bt.Strategy, metaclass=StrategyMeta):
         bt_open_date = bt.num2date(trade.dtopen).timestamp()
         bt_close_date = bt.num2date(trade.dtclose).timestamp() if trade.dtclose > 0 else 0
 
+        trade_price = trade.price
+        if trade.isopen:
+            self.trade_sizes[trade.ref] = trade.size
+        else:
+            trade_size = self.trade_sizes[trade.ref]
+            if trade.long:
+                trade_price = trade.price + (trade.pnl / trade_size)
+            else:
+                trade_price = trade.price - (trade.pnl / trade_size)
+
         trade_model = Trade(
+            ref=trade.ref,
             size=trade.size,
-            price=trade.price,
+            price=trade_price,
             value=trade.value,
             commission=trade.commission,
             pnl=trade.pnl,
