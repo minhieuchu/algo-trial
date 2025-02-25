@@ -1,10 +1,12 @@
 import backtrader as bt
 from datetime import datetime
+import json
 import pandas as pd
 import yfinance as yf
 from typing import Optional
 
 from models.backtest import Backtest, BacktestBase, BacktestResult
+from models.stock import StockData
 from models.strategy import Strategy
 from repositories.backtest_repository import BacktestRepository
 from strategies.Breakout import Breakout
@@ -19,7 +21,7 @@ class BacktestService:
         return result
 
     @staticmethod
-    async def run_backtest(backtest: BacktestBase) -> Optional[BacktestResult]:
+    async def run_backtest(backtest: BacktestBase) -> Optional[tuple[StockData, BacktestResult]]:
         start_time = datetime.fromtimestamp(backtest.start_time).strftime("%Y-%m-%d")
         end_time = datetime.fromtimestamp(backtest.end_time).strftime("%Y-%m-%d")
 
@@ -31,6 +33,8 @@ class BacktestService:
 
         df.columns = [col[0] for col in df.columns]
         df.index = pd.to_datetime(df.index)
+        json_data = df.to_json(orient="index", date_unit="ms") # noqa
+        stock_data = json.loads(json_data)
         data = bt.feeds.PandasData(dataname=df)  # noqa
 
         cerebro = bt.Cerebro()
@@ -90,4 +94,4 @@ class BacktestService:
 
         await BacktestRepository().save_backtest(backtest)
 
-        return backtest_result
+        return stock_data, backtest_result

@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from typing import Optional
 
-from models.backtest import Backtest, BacktestBase, BacktestResult
+from models.backtest import Backtest, BacktestBase, BacktestResponse
 from services.backtest_service import BacktestService
 
 
@@ -18,7 +18,7 @@ class BacktestRouter:
             path="",
             endpoint=self.execute_backtest,
             methods=["POST"],
-            response_model=Optional[BacktestResult],
+            response_model=Optional[BacktestResponse],
         )
 
     @staticmethod
@@ -26,6 +26,10 @@ class BacktestRouter:
         return await BacktestService.get_backtests()
 
     @staticmethod
-    async def execute_backtest(backtest: BacktestBase) -> Optional[BacktestResult]:
+    async def execute_backtest(backtest: BacktestBase) -> Optional[BacktestResponse]:
         result = await BacktestService.run_backtest(backtest)
+        if result:
+            stock_data, backtest_result = result
+            return BacktestResponse(stock_data=stock_data, result=backtest_result)
+
         return result

@@ -2,6 +2,7 @@ from typing import Union, Optional, Literal
 from beanie import Document, PydanticObjectId
 from pydantic import BaseModel
 
+from models.stock import StockData
 from models.strategy import Strategy, SMACrossoverParams, RSIParams, BreakoutParams
 from models.trade import Trade
 
@@ -37,3 +38,8 @@ class BacktestBase(Document):
 
 class Backtest(BacktestBase):
     id: PydanticObjectId
+
+
+class BacktestResponse(BaseModel):
+    stock_data: StockData
+    result: BacktestResult
