@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from config import SERVER_HOST, SERVER_PORT
+from middlewares.rate_limiter import RateLimiterMiddleware
 from routes.backtest_router import BacktestRouter
 from utils import app_lifespan
 
@@ -38,6 +39,7 @@ class HttpService:
             allow_methods=self.options.allow_methods,
             allow_headers=self.options.allow_headers,
         )
+        self._app.add_middleware(RateLimiterMiddleware, request_limit=2, seconds=5)
 
     def _create_routes(self):
         """Add all of FastAPI routers"""
